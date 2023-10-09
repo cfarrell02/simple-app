@@ -5,6 +5,8 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
+
+
 export class SimpleAppStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -17,5 +19,18 @@ export class SimpleAppStack extends cdk.Stack {
       memorySize: 128,
     });
 
+    const simpleFnURL = simpleFn.addFunctionUrl({
+      authType: lambda.FunctionUrlAuthType.AWS_IAM,   // CHANGE
+      cors: {
+        allowedOrigins: ["*"],
+      },
+    });
+
+    
+    new cdk.CfnOutput(this, "Simple Function Url", { value: simpleFnURL.url });
+    
+
   }
 }
+
+
